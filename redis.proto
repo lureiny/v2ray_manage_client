@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package redis;
+
+message Operation {
+    string type = 1;
+    bytes value = 2;
+    // 返回消息推送频道 
+    string channel = 3;
+}
+
+message AddUserOperation {
+    string tag = 1;
+    string email = 2;
+    string protocol = 3;
+    // VLESS/VEMSS id = uuid 
+    // Trojan id = password
+    optional string id = 4;
+}
+
+message RemoveUserOperation {
+    string tag = 1;
+    string email = 2;
+}
+
+message GetStatsOperation {
+    // 获取单个用户统计信息、单个inbound统计信息、全局统计信息
+    string type = 1;
+    string name = 2;
+    // TODO 未来增加对于已删除用户的流量查看功能
+}
+
+message Response {
+    string type = 1;
+    bytes value = 2;
+}
+
+message AddUserOperationResponse {
+    bool statu = 1;
+    string ip = 2;
+    AddUserOperation add_user_operation = 3;
+}
+
+message RemoveUserOperationResponse {
+    bool statu = 1;
+    string ip = 2;
+    RemoveUserOperation remove_user_operation = 3;
+}
+
+message GetStatsOperationResponse {
+    repeated Stats stats = 1;
+}
+
+message Stats {
+    string name = 1;
+    string type = 2;
+    int64 downlink = 3;
+    int64 uplink = 4;
+    bool online = 5;
+}

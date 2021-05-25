@@ -13,6 +13,7 @@ const std::string REMOVE_USER_OPERATION_TYPE = "v2ray.core.app.proxyman.command.
 const uint32_t LEVEL = 0;
 const std::string PROTOCOL_VLESS = "vless";
 const std::string PROTOCOL_VMESS = "vmess";
+const std::string PROTOCOL_TROJAN = "trojan";
 const std::string VLESS_USER_TYPE = "v2ray.core.proxy.vless.Account";
 const std::string VMESS_USER_TYPE = "v2ray.core.proxy.vmess.Account";
 const std::string ADD_USER_OPERATION = "add_user";

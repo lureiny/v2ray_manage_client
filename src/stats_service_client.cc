@@ -56,7 +56,7 @@ bool StatsServiceClient::GetStats(const string &name, bool reset)
     }
 }
 
-bool StatsServiceClient::QueryStats(const string &pattern, bool reset)
+bool StatsServiceClient::QueryStats(const string &pattern, bool reset, QueryStatsResponse *query_stats_response_pointer)
 {
     query_stats_requests.set_pattern(pattern);
     query_stats_requests.set_reset(reset);
@@ -67,11 +67,15 @@ bool StatsServiceClient::QueryStats(const string &pattern, bool reset)
     Status status = _stub->QueryStats(&context, query_stats_requests, &query_stats_response);
     if (status.ok())
     {
-        for (int i = 0; i < query_stats_response.stat_size(); ++i)
+        if (query_stats_response_pointer)
         {
-            cout << query_stats_response.stat(i).name() << endl;
-            cout << query_stats_response.stat(i).value() / 1024 / 1024 << "MB" << endl;
+            query_stats_response_pointer->CopyFrom(query_stats_response);
         }
+        // for (int i = 0; i < query_stats_response.stat_size(); ++i)
+        // {
+        //     cout << query_stats_response.stat(i).name() << endl;
+        //     cout << query_stats_response.stat(i).value() / 1024 / 1024 << "MB" << endl;
+        // }
         return true;
     }
     else
@@ -82,29 +86,35 @@ bool StatsServiceClient::QueryStats(const string &pattern, bool reset)
     }
 }
 
-bool StatsServiceClient::GetSysStats() {
+bool StatsServiceClient::GetSysStats(SysStatsResponse *sys_stats_response)
+{
     ClientContext context;
-    SysStatsResponse sys_stats_response;
+    SysStatsResponse local_sys_stats_response;
 
-    Status status = _stub->GetSysStats(&context, sys_stats_requests, &sys_stats_response);
-    if (status.ok())
-    {   
-        cout << "NumGoroutine: " << sys_stats_response.numgoroutine() << endl;
-        cout << "NumGC: " << sys_stats_response.numgc() << endl;
-        cout << "Alloc: " << sys_stats_response.alloc() << endl;
-        cout << "TotalAlloc: " << sys_stats_response.totalalloc() << endl;
-        cout << "Sys: " << sys_stats_response.sys() << endl;
-        cout << "Mallocs: " << sys_stats_response.mallocs() << endl;
-        cout << "Frees: " << sys_stats_response.frees() << endl;
-        cout << "LiveObjects: " << sys_stats_response.liveobjects() << endl;
-        cout << "PauseTotalNs: " << sys_stats_response.pausetotalns() << endl;
-        cout << "Uptime: " << sys_stats_response.uptime() << endl; 
-        return true;
+    Status status = _stub->GetSysStats(&context, sys_stats_requests, &local_sys_stats_response);
+
+    if (status.ok() && !sys_stats_response)
+    {
+        cout << "NumGoroutine: " << local_sys_stats_response.numgoroutine() << endl;
+        cout << "NumGC: " << local_sys_stats_response.numgc() << endl;
+        cout << "Alloc: " << local_sys_stats_response.alloc() << endl;
+        cout << "TotalAlloc: " << local_sys_stats_response.totalalloc() << endl;
+        cout << "Sys: " << local_sys_stats_response.sys() << endl;
+        cout << "Mallocs: " << local_sys_stats_response.mallocs() << endl;
+        cout << "Frees: " << local_sys_stats_response.frees() << endl;
+        cout << "LiveObjects: " << local_sys_stats_response.liveobjects() << endl;
+        cout << "PauseTotalNs: " << local_sys_stats_response.pausetotalns() << endl;
+        cout << "Uptime: " << local_sys_stats_response.uptime() << endl;
     }
-    else
+    else if (!status.ok())
     {
         cout << status.error_message() << endl;
         // TODO 抛出异常
         return false;
     }
+    else if (status.ok())
+    {
+        sys_stats_response->CopyFrom(local_sys_stats_response);
+    }
+    return true;
 }

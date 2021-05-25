@@ -19,9 +19,9 @@ public:
     // 获取指定用户
     bool GetStats(const std::string &, bool = false);
     // 使用通配符查询多个
-    bool QueryStats(const std::string & = "", bool = false);
+    bool QueryStats(const std::string & = "", bool = false, v2ray::core::app::stats::command::QueryStatsResponse * = nullptr);
     // 查询系统信息
-    bool GetSysStats();
+    bool GetSysStats(v2ray::core::app::stats::command::SysStatsResponse * = nullptr);
 
 private:
     // 创建服务器链接

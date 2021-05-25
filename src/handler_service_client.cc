@@ -38,10 +38,10 @@ HandlerServiceClient::HandlerServiceClient(std::shared_ptr<Channel> channel)
 {
 }
 
-bool HandlerServiceClient::AddUser(const string &tag, string &email, const string &protocol, const string &uuid)
+bool HandlerServiceClient::AddUser(const string &tag, string &email, const string &protocol, const string &id)
 {
     AddUserOperation add_user_operation;
-    if (!this->_MakeAddUserOperation(&add_user_operation, email, protocol, uuid))
+    if (!this->_MakeAddUserOperation(&add_user_operation, email, protocol, id))
     {
         // TODO 抛出异常
         return false;
@@ -74,6 +74,8 @@ bool HandlerServiceClient::_MakeAddUserOperation(AddUserOperation *add_user_oper
         account.set_id(id);
         user_account->set_value(account.SerializeAsString());
     }
+
+    // TODO Trojan协议添加用户
     else
     {
         // TODO 定义一些异常类型
@@ -115,17 +117,18 @@ bool HandlerServiceClient::_AlterInbound()
             AddUserOperation add_user_operation;
             add_user_operation.ParseFromString(alter_inbound_request.operation().value());
             cout << "Add User[Email]: " << add_user_operation.user().email() << ", ";
-            if (add_user_operation.user().account().type() == VMESS_USER_TYPE) {
+            if (add_user_operation.user().account().type() == VMESS_USER_TYPE)
+            {
                 vmess::Account account;
                 account.ParseFromString(add_user_operation.user().account().value());
                 cout << account.id() << endl;
             }
-            else if (add_user_operation.user().account().type() == VLESS_USER_TYPE) {
+            else if (add_user_operation.user().account().type() == VLESS_USER_TYPE)
+            {
                 vless::Account account;
                 account.ParseFromString(add_user_operation.user().account().value());
                 cout << account.id() << endl;
             }
-            
         }
         else if (alter_inbound_request.operation().type().compare(REMOVE_USER_OPERATION_TYPE) == 0)
         {
@@ -133,7 +136,7 @@ bool HandlerServiceClient::_AlterInbound()
             remove_user_operation.ParseFromString(alter_inbound_request.operation().value());
             cout << "Remove User[Email]: " << remove_user_operation.email() << endl;
         }
-        alter_inbound_request.release_operation();        
+        alter_inbound_request.release_operation();
     }
     else
     {
