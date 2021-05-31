@@ -12,7 +12,7 @@ PROTOS = proxy/vmess/account proxy/vless/account \
 		 app/stats/command/command redis local_stats
 		 
 OTHER_OBJS = src/main.o src/handler_service_client.o src/stats_service_client.o src/rpc.o src/cluster.o \
-             src/redis_client.o  src/file_io.o src/common.o
+             src/redis_client.o  src/file_io.o src/common.o src/callback.o
 
 GRPC_CC = app/proxyman/command/command app/stats/command/command
 OBJS_PATH = objs

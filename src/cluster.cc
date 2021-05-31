@@ -1,6 +1,8 @@
 #include "cluster.hpp"
 #include "gflags.hpp"
 #include "redis_client.hpp"
+#include "callback.hpp"
+
 #include <iostream>
 #include "common.hpp"
 #include <thread>
@@ -9,7 +11,7 @@ using namespace std;
 
 int Cluster()
 {
-    
+
     if (FLAGS_redis_server == "" || FLAGS_redis_port > 65535 || FLAGS_redis_port <= 0)
     {
         cout << "Wrong redis address " << FLAGS_redis_server << ":" << FLAGS_redis_port << endl;
@@ -25,9 +27,8 @@ int Cluster()
         cout << "You must set channel. It should be ip" << endl;
         return -1;
     }
-    return redis_client.Subscribe(FLAGS_redis_channel);
+    return redis_client.Subscribe(FLAGS_redis_channel, CallBack::Run);
 }
-
 
 void AutoUpdasteLocalStats()
 {
