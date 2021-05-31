@@ -1,6 +1,7 @@
 #include <string>
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 
 #include "file_io.hpp"
 
@@ -10,8 +11,11 @@
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/prettywriter.h"
 
+#include "local_stats.pb.h"
+
 using namespace std;
 using namespace rapidjson;
+using namespace local;
 
 bool ReadJson(const char *file, rapidjson::Document *root)
 {
@@ -47,4 +51,36 @@ bool WriteJson(const char *file, rapidjson::Document *root)
     root->Accept(writer);
 
     fclose(fp);
+}
+
+bool WriteLocalStats(const string &local_file, LocalStats &local_stats)
+{
+    fstream output(local_file, ios::out | ios::binary | ios::trunc);
+    if (!output)
+    {
+        cout << "Local stats file open to write failed: " << local_file << endl;
+    }
+    if (!local_stats.SerializeToOstream(&output))
+    {
+        cout << "Write to local stats file failed." << endl;
+        return false;
+    }
+    output.close();
+    return true;
+}
+
+bool ReadLocalStats(const string &local_file, LocalStats &local_stats)
+{
+    fstream input(local_file, ios::in | ios::binary);
+    if (!input)
+    {
+        cout << "Local stats file open to read failed: " << local_file << endl;
+        return false;
+    }
+    if (!local_stats.ParseFromIstream(&input))
+    {
+        cout << "Read local stats file parse failed." << endl;
+        return false;
+    }
+    return true;
 }

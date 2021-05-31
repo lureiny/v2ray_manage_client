@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <fstream>
 #include <unordered_map>
 #include <set>
 #include <algorithm>
@@ -24,6 +23,7 @@
 #include "app/stats/command/command.pb.h"
 #include "local_stats.pb.h"
 #include "gflags.hpp"
+#include "file_io.hpp"
 
 using namespace rapidjson;
 using namespace std;
@@ -158,22 +158,6 @@ void ParseV2rayStatToRedisStats(QueryStatsResponse *query_stats_response, vector
     }
 }
 
-bool ReadLocalStats(const string &local_file, LocalStats &local_stats)
-{
-    fstream input(local_file, ios::in | ios::binary);
-    if (!input)
-    {
-        cout << "Local stats file open to read failed: " << local_file << endl;
-        return false;
-    }
-    if (!local_stats.ParseFromIstream(&input))
-    {
-        cout << "Read local stats file parse failed." << endl;
-        return false;
-    }
-    return true;
-}
-
 void MergeLocalStats(LocalStats *new_local_stats, LocalStats *old_local_stats)
 {
     // 对于第一次统计的处理
@@ -239,22 +223,6 @@ void MergeLocalStats(LocalStats *new_local_stats, LocalStats *old_local_stats)
             new_local_stats->mutable_history()->add_stats()->CopyFrom(old_online_stats_pair[key]);
         }
     }
-}
-
-bool WriteLocalStats(const string &local_file, LocalStats &local_stats)
-{
-    fstream output(local_file, ios::out | ios::binary | ios::trunc);
-    if (!output)
-    {
-        cout << "Local stats file open to write failed: " << local_file << endl;
-    }
-    if (!local_stats.SerializeToOstream(&output))
-    {
-        cout << "Write to local stats file failed." << endl;
-        return false;
-    }
-    output.close();
-    return true;
 }
 
 bool CountLocalStats(const string &local_file)

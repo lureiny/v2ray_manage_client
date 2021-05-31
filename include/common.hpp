@@ -22,14 +22,8 @@ bool RemoveUserFromConfig(rapidjson::Document *root, const std::string &tag, con
 // 获取结果从v2ray stat 转换成redis stats
 void ParseV2rayStatToRedisStats(v2ray::core::app::stats::command::QueryStatsResponse *, std::vector<redis::Stats> &);
 
-// 读取本地统计结果
-bool ReadLocalStats(const std::string &local_file, local::LocalStats &local_stats);
-
 // 合并本地结果
 void MergeLocalStats(local::LocalStats *new_local_stats, local::LocalStats *old_local_stats);
-
-// 更新本地统计结果，写入文件
-bool WriteLocalStats(const std::string &local_file, local::LocalStats &local_stats);
 
 // 统计、合并、更新本地统计信息
 bool CountLocalStats(const std::string &local_file);
