@@ -10,6 +10,7 @@
 #include "app/stats/command/command.pb.h"
 #include "redis.pb.h"
 #include "common.hpp"
+#include "operation.hpp"
 
 using namespace std;
 
@@ -38,7 +39,6 @@ DEFINE_string(redis_channel, "", "The cluster node subscribe channel. We suggest
 DEFINE_string(local_stats_file, "lvstats.db", "The local file which store all local stats.");
 DEFINE_uint64(update_local_stats_time, 600, "How long time to auto update local stats file.");
 
-
 int main(int argc, char **argv)
 {
     gflags::SetVersionString("0.9");
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 
     // 每次运行都更新一次
-    CountLocalStats(FLAGS_local_stats_file);
+    CountLocalStats(FLAGS_local_stats_file, FLAGS_server);
 
     if (FLAGS_cluster_mode)
     {
@@ -65,14 +65,27 @@ int main(int argc, char **argv)
     }
     else if (FLAGS_operation == ADD_USER_OPERATION || FLAGS_operation == REMOVE_USER_OPERATION)
     {
-        code = RPCHandlerService();
+        operation_struct operation_struct;
+        operation_struct.type = FLAGS_operation;
+        operation_struct.inbound_tag = FLAGS_inbound_tag;
+        operation_struct.email = FLAGS_name;
+        operation_struct.protocol = FLAGS_protocol;
+        operation_struct.id = FLAGS_id;
+        code = RPCHandlerService(operation_struct);
     }
     else if (FLAGS_operation == QUERY_STATS_REQUEST_OPERATION ||
              FLAGS_operation == GET_STATS_REQUEST_OPERATION ||
              FLAGS_operation == SYS_STATS_REQUEST_OPERATION)
     {
         QueryStatsResponse query_stats_response_pointer;
-        code = RPCStatsService(&query_stats_response_pointer);
+
+        operation_struct operation_struct;
+        operation_struct.type = FLAGS_operation;
+        operation_struct.stats_name = FLAGS_stats_name;
+        operation_struct.reset = FLAGS_reset;
+        operation_struct.query = FLAGS_query_pattern;
+
+        code = RPCStatsService(operation_struct, &query_stats_response_pointer);
 
         vector<Stats> stats;
         ParseV2rayStatToRedisStats(&query_stats_response_pointer, stats);

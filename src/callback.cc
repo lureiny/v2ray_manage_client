@@ -13,6 +13,7 @@
 #include "file_io.hpp"
 #include "local_stats.pb.h"
 #include "redis_client.hpp"
+#include "operation.hpp"
 
 using namespace std;
 
@@ -73,14 +74,15 @@ void CallBack::_CallbackAddUser(const Operation *operation, Response *response)
         cout << "[Remote]: Add user operation parse failed" << endl;
         return;
     }
+    operation_struct operation_struct;
     // 设置参数
-    FLAGS_operation = ADD_USER_OPERATION;
-    FLAGS_inbound_tag = add_user_operation.tag();
-    FLAGS_name = add_user_operation.email();
-    FLAGS_protocol = add_user_operation.protocol();
-    FLAGS_id = add_user_operation.id();
+    operation_struct.type = ADD_USER_OPERATION;
+    operation_struct.inbound_tag = add_user_operation.tag();
+    operation_struct.email = add_user_operation.email();
+    operation_struct.protocol = add_user_operation.protocol();
+    operation_struct.id = add_user_operation.id();
     // 添加操作
-    int statu = RPCHandlerService();
+    int statu = RPCHandlerService(operation_struct);
 
     // 构建Response
     response->set_type(REDIS_ADD_USER_OPERATION_RESPONSE);
@@ -112,12 +114,13 @@ void CallBack::_CallbackRemoveUser(const redis::Operation *operation, redis::Res
             return;
         }
     }
+    operation_struct operation_struct;
     // 设置参数
-    FLAGS_operation = REMOVE_USER_OPERATION;
-    FLAGS_inbound_tag = remove_user_operation.tag();
-    FLAGS_name = remove_user_operation.email();
+    operation_struct.type = REMOVE_USER_OPERATION;
+    operation_struct.inbound_tag = remove_user_operation.tag();
+    operation_struct.email = remove_user_operation.email();
     // 添加操作
-    int statu = RPCHandlerService();
+    int statu = RPCHandlerService(operation_struct);
 
     // 构建Response
     response->set_type(REDIS_REMOVE_USER_OPERATION_RESPONSE);
@@ -142,7 +145,7 @@ void CallBack::_CallbackGetStats(const redis::Operation *operation, redis::Respo
 
     // 对于任何流量查询，都更新本地文件信息
     // 每次流量查询都更新local_static_file
-    if (!CountLocalStats(FLAGS_local_stats_file))
+    if (!CountLocalStats(FLAGS_local_stats_file, FLAGS_server))
     {
         return;
     }
@@ -154,8 +157,10 @@ void CallBack::_CallbackGetStats(const redis::Operation *operation, redis::Respo
         return;
     }
 
+    operation_struct operation_struct;
+
     GetStatsOperationResponse get_stats_operation_response;
-    FLAGS_operation = QUERY_STATS_REQUEST_OPERATION;
+    operation_struct.type = QUERY_STATS_REQUEST_OPERATION;
     // 查询全部流量
     if (get_stats_operation.type() == REDIS_GET_ALL_STATS)
     {
@@ -165,9 +170,9 @@ void CallBack::_CallbackGetStats(const redis::Operation *operation, redis::Respo
     else if (get_stats_operation.type() == REDIS_GET_USER_STATS ||
              get_stats_operation.type() == REDIS_GET_INBOUND_STATS)
     {
-        FLAGS_query_pattern = get_stats_operation.name();
+        operation_struct.query = get_stats_operation.name();
         const string user_or_inbound = get_stats_operation.type() == REDIS_GET_USER_STATS ? "user" : "inbound";
-        _CallbackGetUserOrInoundStats(&get_stats_operation_response, user_or_inbound);
+        _CallbackGetUserOrInoundStats(operation_struct, &get_stats_operation_response, user_or_inbound);
     }
     // 其他查询
     else
@@ -179,19 +184,6 @@ void CallBack::_CallbackGetStats(const redis::Operation *operation, redis::Respo
 
 void CallBack::_CallbackGetAllStats(GetStatsOperationResponse *get_stats_operation_response)
 {
-    // QueryStatsResponse query_stats_response;
-    // FLAGS_query_pattern = "";
-    // RPCStatsService(&query_stats_response);
-
-    // vector<Stats> stats;
-
-    // ParseV2rayStatToRedisStats(&query_stats_response, stats);
-
-    // for (const auto &stat : stats)
-    // {
-    //     get_stats_operation_response->add_stats()->CopyFrom(stat);
-    // }
-
     LocalStats local_stats;
     if (!ReadLocalStats(FLAGS_local_stats_file, local_stats))
     {
@@ -211,11 +203,11 @@ void CallBack::_CallbackGetAllStats(GetStatsOperationResponse *get_stats_operati
     }
 }
 
-void CallBack::_CallbackGetUserOrInoundStats(GetStatsOperationResponse *get_stats_operation_response, const string &user_or_inbound)
+void CallBack::_CallbackGetUserOrInoundStats(operation_struct &operation_struct, GetStatsOperationResponse *get_stats_operation_response, const string &user_or_inbound)
 {
     // 查询
     QueryStatsResponse query_stats_response;
-    RPCStatsService(&query_stats_response);
+    RPCStatsService(operation_struct, &query_stats_response);
 
     // 解析
     vector<Stats> stats;

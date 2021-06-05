@@ -26,6 +26,6 @@ void ParseV2rayStatToRedisStats(v2ray::core::app::stats::command::QueryStatsResp
 void MergeLocalStats(local::LocalStats *new_local_stats, local::LocalStats *old_local_stats);
 
 // 统计、合并、更新本地统计信息
-bool CountLocalStats(const std::string &local_file);
+bool CountLocalStats(const std::string &local_file, const std::string &v2ray_server);
 
 #endif

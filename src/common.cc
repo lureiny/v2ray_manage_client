@@ -22,7 +22,6 @@
 #include "stats_service_client.hpp"
 #include "app/stats/command/command.pb.h"
 #include "local_stats.pb.h"
-#include "gflags.hpp"
 #include "file_io.hpp"
 
 using namespace rapidjson;
@@ -225,7 +224,7 @@ void MergeLocalStats(LocalStats *new_local_stats, LocalStats *old_local_stats)
     }
 }
 
-bool CountLocalStats(const string &local_file)
+bool CountLocalStats(const string &local_file, const string &v2ray_server)
 {
     // 读取本地文件中上次统计情况
     LocalStats old_local_stats;
@@ -233,7 +232,7 @@ bool CountLocalStats(const string &local_file)
 
     // 获取当前统计情况
     QueryStatsResponse query_stats_response_pointer;
-    StatsServiceClient stats_client(grpc::CreateChannel(FLAGS_server, grpc::InsecureChannelCredentials()));
+    StatsServiceClient stats_client(grpc::CreateChannel(v2ray_server, grpc::InsecureChannelCredentials()));
     if (!stats_client.QueryStats("", false, &query_stats_response_pointer))
     {
         return false;

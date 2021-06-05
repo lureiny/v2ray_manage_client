@@ -3,11 +3,12 @@
 
 #include <string>
 #include "app/stats/command/command.pb.h"
+#include "operation.hpp"
 
 std::string GenerateUUID();
 
-int RPCHandlerService();
+int RPCHandlerService(operation_struct &operation_struct);
 
-int RPCStatsService(v2ray::core::app::stats::command::QueryStatsResponse * = nullptr);
+int RPCStatsService(operation_struct &operation_struct, v2ray::core::app::stats::command::QueryStatsResponse * = nullptr);
 
 #endif

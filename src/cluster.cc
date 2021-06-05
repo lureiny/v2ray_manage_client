@@ -34,7 +34,7 @@ void AutoUpdasteLocalStats()
 {
     while (true)
     {
-        if (CountLocalStats(FLAGS_local_stats_file))
+        if (CountLocalStats(FLAGS_local_stats_file, FLAGS_server))
         {
             cout << "Local stats file  update." << endl;
         }

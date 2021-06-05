@@ -3,6 +3,7 @@
 
 #include "redis.pb.h"
 #include "redis_client.hpp"
+#include "operation.hpp"
 #include <string>
 
 const std::string REDIS_ADD_USER_OPERATION = "redis.AddUserOperation";
@@ -40,7 +41,7 @@ private:
     static void _CallbackGetAllStats(redis::GetStatsOperationResponse *);
 
     // 解析并过滤User/inbound流量
-    static void _CallbackGetUserOrInoundStats(redis::GetStatsOperationResponse *, const std::string &);
+    static void _CallbackGetUserOrInoundStats(operation_struct &operation_struct, redis::GetStatsOperationResponse *, const std::string &);
 
     // 发送response到redis
     static bool _ResponseToRedis(redis::Response *, const std::string &channel, RedisClient *);
