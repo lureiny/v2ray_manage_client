@@ -1,6 +1,6 @@
 #include <iostream>
 
 int main() {
-  std::cout << "demo" << std::endl;
+  std::cout << t.t() << std::endl;
   return 0;
 }

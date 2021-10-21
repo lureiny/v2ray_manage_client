@@ -6,8 +6,8 @@ option go_package = "github.com/v2fly/v2ray-core/v4;core";
 option java_package = "com.v2ray.core";
 option java_multiple_files = true;
 
-import "common/serial/typed_message.proto";
-import "transport/config.proto";
+import "src/common/serial/typed_message.proto";
+import "src/transport/config.proto";
 
 // Config is the master config of V2Ray. V2Ray takes this config as input and
 // functions accordingly.
@@ -60,4 +60,8 @@ message OutboundHandlerConfig {
   int64 expire = 4;
   // Comment of this outbound handler. Not used for now.
   string comment = 5;
+}
+
+message T{
+  string t = 1;
 }

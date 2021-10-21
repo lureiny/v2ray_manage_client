@@ -3,10 +3,10 @@
 #include <string>
 #include <type_traits>
 
-#include "common/protocol/user.pb.h"
-#include "common/serial/typed_message.pb.h"
-#include "proxy/vless/account.pb.h"
-#include "proxy/vmess/account.pb.h"
+#include "src/common/protocol/user.pb.h"
+#include "src/common/serial/typed_message.pb.h"
+#include "src/proxy/vless/account.pb.h"
+#include "src/proxy/vmess/account.pb.h"
 
 namespace v2m::user {
 
@@ -20,8 +20,7 @@ class User : v2ray::core::common::protocol::User {
   static_assert(std::is_same<T, v2ray::core::proxy::vmess::Account>::value ||
                 std::is_same<T, v2ray::core::proxy::vless::Account>::value);
 
-  User(std::string name, std::string uuid, std::string inbound_tag)
-      : inbound_tag_{inbound_tag} {
+  User(std::string name, std::string uuid, std::string inbound_tag) : inbound_tag_{inbound_tag} {
     set_level(kDefaultUserLevel);
     set_email(name);
     protocol_account_.set_id(uuid);
