@@ -28,3 +28,15 @@ proto_library(
         "//src/common/serial:typed_message",
     ],
 )
+
+cc_library(
+    name = "command_cc_grpc_proto",
+    srcs = ["command.grpc.pb.cc"],
+    hdrs = ["command.grpc.pb.h"],
+    copts = ["-ldl"],
+    deps = [
+        "command_cc_proto",
+        "@com_github_grpc_grpc//:grpc++",
+        # "@com_github_grpc_grpc//:grpc++_reflection",
+    ],
+)

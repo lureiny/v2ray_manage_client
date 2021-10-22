@@ -4,7 +4,7 @@
 #ifndef GRPC_app_2fproxyman_2fcommand_2fcommand_2eproto__INCLUDED
 #define GRPC_app_2fproxyman_2fcommand_2fcommand_2eproto__INCLUDED
 
-#include "app/proxyman/command/command.pb.h"
+#include "src/app/proxyman/command/command.pb.h"
 
 #include <functional>
 #include <grpc/impl/codegen/port_platform.h>

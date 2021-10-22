@@ -36,8 +36,7 @@ def v2m_workspace():
     git_repository(
         name = "com_google_protobuf",
         remote = "https://github.com/protocolbuffers/protobuf",
-        # branch = "3.19.x",
-        tag = "v3.15.1",
+        branch = "3.19.x",
     )
 
     http_archive(

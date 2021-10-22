@@ -2,8 +2,8 @@
 // If you make any local change, they will be lost.
 // source: app/proxyman/command/command.proto
 
-#include "app/proxyman/command/command.pb.h"
-#include "app/proxyman/command/command.grpc.pb.h"
+#include "src/app/proxyman/command/command.pb.h"
+#include "src/app/proxyman/command/command.grpc.pb.h"
 
 #include <functional>
 #include <grpcpp/impl/codegen/async_stream.h>
