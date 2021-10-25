@@ -1,22 +1,16 @@
-load("@rules_cc//cc:defs.bzl", "cc_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@rules_proto_grpc//cpp:defs.bzl", "cpp_grpc_library", "cpp_proto_library")
 
 package(default_visibility = ["//visibility:public"])
 
-# cc_library(
-#     name = "command_pb",
-#     srcs = ["command.pb.cc"],
-#     hdrs = ["command.pb.h"],
-#     deps = [
-#         # ":user_pb",
-#         "@com_google_protobuf//:protobuf_headers",
-#         "@com_google_protobuf//:protobuf_lite",
-#     ],
-# )
-
-cc_proto_library(
+cpp_proto_library(
     name = "command_cc_proto",
-    deps = [":command"],
+    protos = ["command"],
+    deps = [
+        "//src:config_cc_proto",
+        "//src/common/protocol:user_cc_proto",
+        "//src/common/serial:typed_message_cc_proto",
+    ],
 )
 
 proto_library(
@@ -29,14 +23,12 @@ proto_library(
     ],
 )
 
-cc_library(
+cpp_grpc_library(
     name = "command_cc_grpc_proto",
-    srcs = ["command.grpc.pb.cc"],
-    hdrs = ["command.grpc.pb.h"],
-    copts = ["-ldl"],
+    protos = ["command"],
     deps = [
-        "command_cc_proto",
-        "@com_github_grpc_grpc//:grpc++",
-        # "@com_github_grpc_grpc//:grpc++_reflection",
+        "//src:config_cc_proto",
+        "//src/common/protocol:user_cc_proto",
+        "//src/common/serial:typed_message_cc_proto",
     ],
 )

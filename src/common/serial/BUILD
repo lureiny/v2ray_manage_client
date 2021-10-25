@@ -1,10 +1,11 @@
 load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@rules_proto_grpc//cpp:defs.bzl", "cpp_proto_library")
 
 package(default_visibility = ["//visibility:public"])
 
-cc_proto_library(
+cpp_proto_library(
     name = "typed_message_cc_proto",
-    deps = [":typed_message"],
+    protos = ["typed_message"],
 )
 
 proto_library(
