@@ -9,10 +9,9 @@
 #include "src/proxy/vmess/account.pb.h"
 
 namespace v2m::user {
-
 constexpr uint32_t kDefaultUserLevel = 0;
-constexpr char* kVlessAccountType = "v2ray.core.proxy.vless.Account";
-constexpr char* kVmessAccountType = "v2ray.core.proxy.vmess.Account";
+constexpr char* kVlessAccountType = (char*)"v2ray.core.proxy.vless.Account";
+constexpr char* kVmessAccountType = (char*)"v2ray.core.proxy.vmess.Account";
 
 template <typename T>
 class User {
@@ -25,18 +24,18 @@ class User {
     SetAccount();
   };
 
-  inline T GetAccount() { return account_; };
+  inline T GetAccount() const { return account_; };
 
-  inline std::string GetAccountType() { return account_type_; };
+  inline std::string GetAccountType() const { return account_type_; };
 
-  inline std::string GetEmail() { return email_; };
+  inline std::string GetEmail() const { return email_; };
 
-  inline std::string GetUuid() { return uuid_; };
+  inline std::string GetUuid() const { return uuid_; };
 
-  inline std::string GetInboundTag() { return inbound_tag_; };
+  inline std::string GetInboundTag() const { return inbound_tag_; };
 
   // Insert user info to the "v2ray::core::common::protocol::User" which has been create.
-  void InsertUserInfoToUserProtobuf(v2ray::core::common::protocol::User* user) {
+  void InsertUserInfoToUserProtobuf(v2ray::core::common::protocol::User* user) const {
     user->set_level(level_);
     user->set_email(email_);
     v2ray::core::common::serial::TypedMessage* typed_account = new v2ray::core::common::serial::TypedMessage;

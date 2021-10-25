@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <type_traits>
 
 #include "src/app/proxyman/command/command.pb.h"
@@ -8,8 +7,8 @@
 #include "src/common/serial/typed_message.pb.h"
 
 namespace v2m::operation {
-constexpr char* kAddUserOperation = "v2ray.core.app.proxyman.command.AddUserOperation";
-constexpr char* kRemoveUserOperation = "v2ray.core.app.proxyman.command.RemoveUserOperation";
+constexpr char* kAddUserOperationType = (char*)"v2ray.core.app.proxyman.command.AddUserOperation";
+constexpr char* kRemoveUserOperationType = (char*)"v2ray.core.app.proxyman.command.RemoveUserOperation";
 
 // Operation should be "v2ray::core::app::proxyman::command::AddUserOperation"
 // or "v2ray::core::app::proxyman::command::RemoveUserOperation"
@@ -21,9 +20,9 @@ class AlterInboundOperation {
  public:
   AlterInboundOperation() {
     if (std::is_same<Operation, v2ray::core::app::proxyman::command::AddUserOperation>::value) {
-      operation_type_ = kAddUserOperation;
+      operation_type_ = kAddUserOperationType;
     } else {
-      operation_type_ = kRemoveUserOperation;
+      operation_type_ = kRemoveUserOperationType;
     }
   };
 

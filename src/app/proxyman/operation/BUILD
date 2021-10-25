@@ -15,7 +15,6 @@ cc_test(
         "//src/common/protocol:user_cc_proto",
         "//src/common/serial:typed_message_cc_proto",
         "//src/proxy/vmess:account_cc_proto",
-        "@gtest",
         "@gtest//:gtest_main",
     ],
 )
