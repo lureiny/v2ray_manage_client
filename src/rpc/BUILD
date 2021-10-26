@@ -18,7 +18,6 @@ cc_test(
     name = "handler_service_client_test",
     srcs = ["handler_service_client_test.cc"],
     deps = [
-        "add",
         "handler_service_client",
         "//src/proxy/vmess:account_cc_proto",
         "@com_github_grpc_grpc//:grpc++",
