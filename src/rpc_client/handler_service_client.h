@@ -11,11 +11,12 @@
 #include "src/common/protocol/user.pb.h"
 #include "src/user.h"
 
-namespace v2m::client {
+namespace v2m {
+namespace client {
 class HandlerServiceClient {
  public:
   explicit HandlerServiceClient(v2ray::core::app::proxyman::command::HandlerService::StubInterface* stub)
-      : stub_{stub} {};
+      : stub_{stub} {}
 
   // Send the "AlterInboundRequest" to v2ray api interface.
   template <class Account>
@@ -96,4 +97,5 @@ inline grpc::Status HandlerServiceClient::AlterInbound(
 
   return stub_->AlterInbound(&context, alter_inbound_request, &alter_inbound_response);
 }
-}  // namespace v2m::client
+}  // namespace client
+}  // namespace v2m

@@ -7,7 +7,8 @@
 #include "src/proxy/vmess/account.pb.h"
 #include "src/user.h"
 
-// namespace v2m::test {
+namespace v2m {
+namespace operation {
 TEST(alter_inbound_operation_test, add_user_operation) {
   // 新构建方法
   v2m::user::User<v2ray::core::proxy::vmess::Account> user("test", "76562e1a-730d-4fd8-bc36-4913edcd028f", "vmess");
@@ -54,4 +55,5 @@ TEST(alter_inbound_operation_test, remove_user_operation) {
 
   EXPECT_EQ(typed_operation->SerializeAsString(), typed_operation1->SerializeAsString());
 }
-// }  // namespace v2m::test
+}  // namespace operation
+}  // namespace v2m

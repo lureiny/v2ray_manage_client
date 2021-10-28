@@ -6,7 +6,8 @@
 #include "src/common/protocol/user.pb.h"
 #include "src/common/serial/typed_message.pb.h"
 
-namespace v2m::operation {
+namespace v2m {
+namespace operation {
 constexpr char* kAddUserOperationType = (char*)"v2ray.core.app.proxyman.command.AddUserOperation";
 constexpr char* kRemoveUserOperationType = (char*)"v2ray.core.app.proxyman.command.RemoveUserOperation";
 
@@ -24,7 +25,7 @@ class AlterInboundOperation {
     } else {
       operation_type_ = kRemoveUserOperationType;
     }
-  };
+  }
 
   // Insert data to add user operation. This function can be use only when Operation ==
   // "v2ray::core::app::proxyman::command::AddUserOperation"
@@ -33,7 +34,7 @@ class AlterInboundOperation {
         std::is_same<Operation, v2ray::core::app::proxyman::command::AddUserOperation>::value,
         "This function can be use only when Operation == \"v2ray::core::app::proxyman::command::AddUserOperation\"");
     operation_.set_allocated_user(user);
-  };
+  }
 
   // Insert data to remove user operation.This function can be use only when Operation ==
   // "v2ray::core::app::proxyman::command::RemoveUserOperation"
@@ -42,15 +43,16 @@ class AlterInboundOperation {
         std::is_same<Operation, v2ray::core::app::proxyman::command::RemoveUserOperation>::value,
         "This function can be use only when Operation == \"v2ray::core::app::proxyman::command::RemoveUserOperation\"");
     operation_.set_email(email);
-  };
+  }
 
   inline void InsertDataToTypedInboundOperation(v2ray::core::common::serial::TypedMessage* typed_operation) {
     typed_operation->set_type(operation_type_);
     typed_operation->set_value(operation_.SerializeAsString());
-  };
+  }
 
  private:
   std::string operation_type_;
   Operation operation_;
 };
-}  // namespace v2m::operation
+}  // namespace operation
+}  // namespace v2m

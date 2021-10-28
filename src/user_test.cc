@@ -6,6 +6,8 @@
 #include "src/proxy/vless/account.pb.h"
 #include "src/proxy/vmess/account.pb.h"
 
+namespace v2m {
+namespace user {
 TEST(user_test, my_user) {
   // Test vmess user.
   v2ray::core::proxy::vmess::Account vmess_account;
@@ -59,3 +61,5 @@ TEST(user_test, my_user) {
 
   EXPECT_EQ(vmess_user2.SerializeAsString(), vmess_user1->SerializeAsString());
 }
+}  // namespace user
+}  // namespace v2m

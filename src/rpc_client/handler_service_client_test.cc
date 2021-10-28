@@ -12,7 +12,8 @@
 #include "src/proxy/vmess/account.pb.h"
 #include "src/user.h"
 
-namespace v2m::client {
+namespace v2m {
+namespace client {
 class RpcTestInterface : public ::testing::Test {
  protected:
   static void SetUpTestCase() {}
@@ -126,4 +127,5 @@ TEST_F(RpcTestInterface, UnsuccessfullyRemoveUser) {
   std::string remove_vless_user_output = ::testing::internal::GetCapturedStdout();
   EXPECT_EQ(remove_vless_user_output, "The user vless_test not exist.\n");
 }
-}  // namespace v2m::client
+}  // namespace client
+}  // namespace v2m
