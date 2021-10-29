@@ -1,6 +1,5 @@
 cc_library(
     name = "handler_service_client",
-    # srcs = ["handler_service_client.cc"],
     hdrs = ["handler_service_client.h"],
     deps = [
         "//src:my_user",
@@ -22,5 +21,14 @@ cc_test(
         "//src/proxy/vmess:account_cc_proto",
         "@com_github_grpc_grpc//:grpc++",
         "@gtest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "stats_service_client",
+    hdrs = ["stats_service_client.h"],
+    deps = [
+        "//src/app/stats/command:command_cc_grpc_proto",
+        "@com_github_grpc_grpc//:grpc++",
     ],
 )
